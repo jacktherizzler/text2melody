@@ -4,7 +4,7 @@ import requests
 app = Flask(__name__)
 
 API_URL = "https://api-inference.huggingface.co/models/facebook/musicgen-small"
-headers = {"Authorization": "Bearer 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"}
+headers = {"Authorization": "Bearer xxxxxxxx(your API key)xxxxxxxx"}
 
 def query_musicgen(payload):
     response = requests.post(API_URL, headers=headers, json=payload)
