@@ -15,7 +15,6 @@ def query_musicgen(payload):
 
 @app.route('/')
 def home():
-    # Serve the index.html file
     return render_template('index.html')
 
 @app.route('/generate-audio', methods=['POST'])
@@ -27,12 +26,12 @@ def generate_audio():
         if not prompt:
             return jsonify({"error": "Prompt is required"}), 400
 
-        # Query the music generation API
+        # querying the music generation API
         audio_bytes = query_musicgen({"inputs": prompt})
         if audio_bytes is None:
             return jsonify({"error": "Failed to generate audio"}), 500
 
-        # Save the audio file
+        # to save the audio file
         file_path = "static/generated_audio.wav"
         with open(file_path, "wb") as audio_file:
             audio_file.write(audio_bytes)
