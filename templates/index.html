@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-to-Music Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #FF6500;
+            color:white;
+        }
+        input[type="text"], button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        button {
+            background-color: #1E3E62;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0B192C;
+        }
+        audio {
+            margin-top: 20px;
+            width: 100%;
+            display: none;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .content{
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Text-to-Music Generator</h1>
+    <p>Enter a music description to generate a unique audio track.</p>
+    <input type="text" id="text-prompt" placeholder="Enter your music prompt here..." />
+    <button onclick="generateAudio()">Generate Audio</button>
+    <audio id="audio-player" controls></audio>
+    <p id="error-message" class="error"></p>
+
+    <script>
+        async function generateAudio() {
+            const prompt = document.getElementById('text-prompt').value;
+            const errorMessage = document.getElementById('error-message');
+            const audioPlayer = document.getElementById('audio-player');
+
+            // to clear any previous error message
+            errorMessage.textContent = '';
+            audioPlayer.style.display = 'none';
+
+            if (!prompt.trim()) {
+                errorMessage.textContent = "Please enter a valid prompt.";
+                return;
+            }
+
+            try {
+                // making API request to the backend
+                const response = await fetch('/generate-audio', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.audio_url) {
+                    // setting the audio source and display the player
+                    audioPlayer.src = data.audio_url;
+                    audioPlayer.style.display = 'block';
+                } else {
+                    errorMessage.textContent = data.error || "An unexpected error occurred.";
+                }
+            } catch (err) {
+                console.error("Error fetching audio:", err);
+                errorMessage.textContent = "Failed to generate audio. Please try again.";
+            }
+        }
+    </script>
+    <div class="content">
+        <h3>About MusicGen</h3>
+MusicGen is a state-of-the-art AI model developed by the FAIR team of Meta AI for controllable music generation. 
+<br>It leverages an EnCodec model for audio tokenization and a transformer-based auto-regressive language model for music modeling. 
+<br>MusicGen supports text-to-music generation and melody-guided music generation, enabling researchers and enthusiasts to explore AI’s potential in creating diverse music compositions.
+
+<h3>Key Features:</h3>
+	•	Scalable Models: Available in sizes ranging from 300M to 3.3B parameters.<br>
+	•	Flexible Generation: Generate music based on textual descriptions or melodies.<br>
+	•	Research Focus: Primarily intended for research and experimentation in AI-driven music generation.
+
+<h3>Model Applications:</h3>
+MusicGen is designed for research and exploration, providing insights into generative AI’s capabilities in music. It should not be used in downstream applications without risk evaluation.
+
+For more details, visit the official paper: Simple and Controllable Music Generation.
+
+<h3>License:</h3>
+	•	Code: MIT License<br>
+	•	Model Weights: CC-BY-NC 4.0
+    </div>
+</body>
+<footer>
+    <p>© 2024 JackTheRizzler. All rights reserved.</p>
+</footer>
+</html>
