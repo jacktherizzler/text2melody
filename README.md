@@ -2,6 +2,8 @@
 
 Welcome to the MusicGen Integration repository! This repository provides the necessary files and instructions to use MusicGen, Meta AI's advanced model for controllable music generation.
 
+Website is Live @ `https://text2melody.onrender.com`
+
 ## About MusicGen
 
 MusicGen is a cutting-edge AI model for text-to-music and melody-guided music generation. Developed by the FAIR team at Meta AI, it combines EnCodec for audio tokenization and a transformer-based language model for seamless music modeling.
