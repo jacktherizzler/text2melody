@@ -3,61 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text-to-Music Generator</title>
+    <title>Text-to-Melody Generator</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-            background-color: #FF6500;
-            color:white;
-        }
-        input[type="text"], button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 16px;
-        }
-        button {
-            background-color: #1E3E62;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #0F2027, #203A43, #2C5364);
             color: white;
-            border: none;
-            cursor: pointer;
+            text-align: center;
+            flex-direction: column;
         }
-        button:hover {
-            background-color: #0B192C;
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            max-width: 500px;
+            width: 90%;
+            animation: fadeIn 1s ease-in-out;
         }
-        audio {
-            margin-top: 20px;
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+        
+        input {
             width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+            margin-bottom: 10px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #ff6500;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        button:hover {
+            background: #e55d00;
+            transform: scale(1.05);
+        }
+        
+        audio {
+            width: 100%;
+            margin-top: 15px;
             display: none;
         }
+        
         .error {
             color: red;
+            font-size: 14px;
             margin-top: 10px;
         }
-        .content{
-            text-align: left;
+        
+        footer {
+            margin-top: 20px;
+            font-size: 12px;
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
-    <h1>Text-to-Music Generator</h1>
-    <p>Enter a music description to generate a unique audio track.</p>
-    <input type="text" id="text-prompt" placeholder="Enter your music prompt here..." />
-    <button onclick="generateAudio()">Generate Audio</button>
-    <audio id="audio-player" controls></audio>
-    <p id="error-message" class="error"></p>
-
+    <div class="container">
+        <h1>Text-to-Melody Generator 🎵</h1>
+        <p>Enter a description to generate a unique audio track.</p>
+        <input type="text" id="text-prompt" placeholder="Enter your music prompt..." />
+        <button onclick="generateAudio()">Generate Audio</button>
+        <audio id="audio-player" controls></audio>
+        <p id="error-message" class="error"></p>
+    </div>
+    
+    <footer>© 2024 JackTheRizzler (SriHarsha Bodicherla). All rights reserved.</footer>
+    
     <script>
         async function generateAudio() {
             const prompt = document.getElementById('text-prompt').value;
             const errorMessage = document.getElementById('error-message');
             const audioPlayer = document.getElementById('audio-player');
 
-            // to clear any previous error message
             errorMessage.textContent = '';
             audioPlayer.style.display = 'none';
 
@@ -67,7 +127,6 @@
             }
 
             try {
-                // making API request to the backend
                 const response = await fetch('/generate-audio', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -77,7 +136,6 @@
                 const data = await response.json();
 
                 if (response.ok && data.audio_url) {
-                    // setting the audio source and display the player
                     audioPlayer.src = data.audio_url;
                     audioPlayer.style.display = 'block';
                 } else {
@@ -89,28 +147,5 @@
             }
         }
     </script>
-    <div class="content">
-        <h3>About MusicGen</h3>
-MusicGen is a state-of-the-art AI model developed by the FAIR team of Meta AI for controllable music generation. 
-<br>It leverages an EnCodec model for audio tokenization and a transformer-based auto-regressive language model for music modeling. 
-<br>MusicGen supports text-to-music generation and melody-guided music generation, enabling researchers and enthusiasts to explore AI’s potential in creating diverse music compositions.
-
-<h3>Key Features:</h3>
-	•	Scalable Models: Available in sizes ranging from 300M to 3.3B parameters.<br>
-	•	Flexible Generation: Generate music based on textual descriptions or melodies.<br>
-	•	Research Focus: Primarily intended for research and experimentation in AI-driven music generation.
-
-<h3>Model Applications:</h3>
-MusicGen is designed for research and exploration, providing insights into generative AI’s capabilities in music. It should not be used in downstream applications without risk evaluation.
-
-For more details, visit the official paper: Simple and Controllable Music Generation.
-
-<h3>License:</h3>
-	•	Code: MIT License<br>
-	•	Model Weights: CC-BY-NC 4.0
-    </div>
 </body>
-<footer>
-    <p>© 2024 JackTheRizzler. All rights reserved.</p>
-</footer>
 </html>
