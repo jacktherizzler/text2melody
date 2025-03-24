@@ -1,9 +1,9 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-CORS(app)
 import requests
 
 app = Flask(__name__)
+CORS(app)
 
 API_URL = "https://api-inference.huggingface.co/models/facebook/musicgen-small"
 headers = {"Authorization": "Bearer xxxxxxxx(your API key)xxxxxxxx"}
@@ -45,4 +45,4 @@ def generate_audio():
         return jsonify({"error": "An internal server error occurred"}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
